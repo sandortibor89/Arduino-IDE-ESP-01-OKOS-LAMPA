@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="hu">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<style>
+	html, body {
+		margin: 0;
+		padding: 0;
+		font-family: Arial;
+		font-size: 15px;
+	}
+
+	h1 {
+		margin: 10px;
+		padding: 0;
+	}
+
+	p {
+		margin: 10px;
+		padding: 0;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	input {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+	}
+
+	input[type=text] {
+		width: 100%;
+		padding: 12px;
+		border: 1px solid #ccc;
+		border-radius: 0;
+		font-family: Arial;
+		font-size: 15px;
+	}
+
+	label {
+		padding: 12px 12px 12px 0;
+		display: inline-block;
+		text-align: right;
+		width: 100%;
+	}
+
+	input[type=submit] {
+		background-color: #4CAF50;
+		color: white;
+		padding: 12px 20px;
+		border: none;
+		border-radius: 0;
+		cursor: pointer;
+		float: right;
+		font-family: Arial;
+		font-size: 15px;
+	}
+
+	input[type=submit]:hover {
+		background-color: #45a049;
+	}
+
+	.container {
+		background-color: #f2f2f2;
+		padding: 20px;
+	}
+
+	.col-25 {
+		float: left;
+		width: 25%;
+		margin-top: 6px;
+	}
+
+	.col-75 {
+		float: left;
+		width: 75%;
+		margin-top: 6px;
+	}
+
+	.row:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+
+	@media screen and (max-width: 700px) {
+		.col-25, .col-75, input[type=submit] {
+			width: 100%;
+			margin-top: 0;
+		}
+		label {
+			text-align: left;
+		}
+	}
+</style>
+<title>WiFi csatlakozás</title>
+</head>
+<body>
+	<h1>Olvassa el figyelmesen!</h1>
+	<p>Köszönjük hogy minket választott!</p>
+	<p>A beállítani kívánt okos eszköznek csatlakoznia kell az ön vezetéknélküli WiFi hálózatához a megfelelő működése érdekében. Kérjük adja meg a szükséges paramétereket.</p>
+	<div class="container">
+		<form method="post">
+			<div class="row">
+				<div class="col-25">
+					<label for="ssid">WiFi hálózat neve</label>
+				</div>
+				<div class="col-75">
+					<input type="text" id="ssid" name="ssid" placeholder="...">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-25">
+					<label for="pass">WiFi hálózat jelszava</label>
+				</div>
+				<div class="col-75">
+					<input type="text" id="pass" name="pass" placeholder="...">
+				</div>
+			</div>
+			<div class="row">
+				<input type="submit" value="Csatlakozás">
+			</div>
+		</form>
+	</div>
+</body>
+</html>
