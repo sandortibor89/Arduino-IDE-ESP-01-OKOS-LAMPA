@@ -31,17 +31,37 @@ void setup() {
   }
   
   if (apmode) {
-    scanWifiNetworks();
-    Serial.println("wifi hálózatok");
+    uint8_t n = scanWifiNetworks();
     WiFi.mode(WIFI_AP);
     WiFi.softAP("OkosAP");
     dnsServer.setTTL(300);
     dnsServer.setErrorReplyCode(DNSReplyCode::ServerFailure);
     dnsServer.start(53, "*", WiFi.softAPIP());
-    webServer.onNotFound([]() {
-      File file = SPIFFS.open("/index.html", "r");
-      webServer.streamFile(file, "text/html");
-      file.close();
+
+    File file = SPIFFS.open("/index.html", "r");
+    String content = file.readString();
+    file.close();
+
+    int16_t optionStartPos = content.indexOf("</option>");
+    if (optionStartPos != -1) {
+      String newContent = content.substring(0, optionStartPos + 9);
+      if (n > 0) {
+        for (int i = 0; i < n; ++i) {
+          newContent+= "<option value=\"";
+          newContent+= WiFi.SSID(i);
+          newContent+= "\">";
+          newContent+= WiFi.SSID(i);
+          newContent+= "</option>";
+          delay(10);
+        }
+        newContent+= content.substring(optionStartPos + 9);
+        content = newContent;
+      }
+    }
+    
+    webServer.onNotFound([content]() {
+      //webServer.streamFile(file, "text/html");
+      webServer.send(200, "text/html", content);
       if (webServer.method() == HTTP_POST) {
         ssid = webServer.arg("ssid");
         pass = webServer.arg("pass");
@@ -102,7 +122,7 @@ bool setSsidAndPass(String ssid, String pass) {
   file.print(ssid);
   file.println("\";");
   file.print("PASS=\"");
-  file.println(pass);
+  file.print(pass);
   file.print("\";");
   file.close();
   return true;
@@ -118,17 +138,11 @@ bool connectWifiNetwork(String ssid, String pass) {
   return (WiFi.status() == WL_CONNECTED);
 }
 
-void scanWifiNetworks() {
+uint8_t scanWifiNetworks() {
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   delay(100);
-  int n = WiFi.scanNetworks();
-  if (n > 0) {
-    for (int i = 0; i < n; ++i) {
-      WiFi.SSID(i);
-      delay(10);
-    }
-  }
+  return WiFi.scanNetworks(false, true);
 }
 
 //wifi connect and disconnect events
