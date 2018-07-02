@@ -45,6 +45,9 @@ void setup() {
       if (webServer.method() == HTTP_POST) {
         ssid = webServer.arg("ssid");
         pass = webServer.arg("pass");
+        if(setSsidAndPass(ssid, pass)) {
+          ESP.restart();
+        }
       }
     });
   } else {
@@ -88,6 +91,20 @@ bool getSsidAndPass(String *ssid, String *pass) {
   if (ssidStartPos == -1 || ssidStopPos == -1 || passStartPos == -1 || passStopPos == -1) {return false;}
   *ssid = content.substring(ssidStartPos + 6, ssidStopPos);
   *pass = content.substring(passStartPos + 6, passStopPos);
+  return true;
+}
+
+bool setSsidAndPass(String ssid, String pass) {
+  File file;
+  file = SPIFFS.open("/wifi", "w");
+  if (!file) {return false;}
+  file.print("SSID=\"");
+  file.print(ssid);
+  file.println("\";");
+  file.print("PASS=\"");
+  file.println(pass);
+  file.print("\";");
+  file.close();
   return true;
 }
 
